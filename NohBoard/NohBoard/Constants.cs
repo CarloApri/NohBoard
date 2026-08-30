@@ -64,6 +64,22 @@ namespace ThoNohT.NohBoard
         public static Graphics G => Graphics.FromHwndInternal(new Form().Handle);
 
         /// <summary>
+        /// The category of the keyboard definition that is loaded when NohBoard starts without any settings.
+        /// </summary>
+        public const string DefaultCategory = "joao7yt";
+
+        /// <summary>
+        /// The keyboard definition that is loaded when NohBoard starts without any settings.
+        /// </summary>
+        public const string DefaultKeyboard = "fps";
+
+        /// <summary>
+        /// The style that is loaded when NohBoard starts without any settings. Its background is green, which is
+        /// what lets the chroma key filter in the OBS quick guide remove it.
+        /// </summary>
+        public const string DefaultStyle = "clean-black_clean-white";
+
+        /// <summary>
         /// The name of the settings file, without a folder.
         /// </summary>
         private const string SettingsFileName = "NohBoard.json";

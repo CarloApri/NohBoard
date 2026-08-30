@@ -181,19 +181,19 @@ namespace ThoNohT.NohBoard.Extra
         /// The category of the currently loaded keyboard file.
         /// </summary>
         [DataMember]
-        public string LoadedCategory { get; set; }
+        public string LoadedCategory { get; set; } = Constants.DefaultCategory;
 
         /// <summary>
         /// The name of the currently loaded keyboard file.
         /// </summary>
         [DataMember]
-        public string LoadedKeyboard { get; set; }
+        public string LoadedKeyboard { get; set; } = Constants.DefaultKeyboard;
 
         /// <summary>
         /// The name of the style that is currently loaded.
         /// </summary>
         [DataMember]
-        public string LoadedStyle { get; set; }
+        public string LoadedStyle { get; set; } = Constants.DefaultStyle;
 
         /// <summary>
         /// Indicates whether the currently loaded style is loaded from the global folder or the
