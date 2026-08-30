@@ -78,40 +78,59 @@ namespace ThoNohT.NohBoard.Forms
         #region Version check
 
         /// <summary>
-        /// Attempts to retrieve the latest version from the update site.
+        /// The address the latest published release is looked up from. Reading the releases of this repository
+        /// means every release that is published announces itself, with no separate version file to keep updated.
         /// </summary>
-        public Task GetLatestVersion()
+        private const string LatestReleaseUrl = "https://api.github.com/repos/CarloApri/NohBoard/releases/latest";
+
+        /// <summary>
+        /// The page the user is sent to when a newer version is available.
+        /// </summary>
+        private const string ReleasesUrl = "https://github.com/CarloApri/NohBoard/releases";
+
+        /// <summary>
+        /// One client for the lifetime of the program. Creating one per request exhausts sockets.
+        /// </summary>
+        private static readonly HttpClient UpdateClient = CreateUpdateClient();
+
+        /// <summary>
+        /// Creates the client the version check uses.
+        /// </summary>
+        /// <returns>The client.</returns>
+        private static HttpClient CreateUpdateClient()
         {
-            return new Task(
-                () =>
+            var client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+
+            // The GitHub API refuses requests that do not identify themselves.
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("NohBoard");
+            return client;
+        }
+
+        /// <summary>
+        /// Looks up the latest published release and remembers it when it is newer than this build. Not being able
+        /// to reach GitHub is not worth an error message for something the user did not ask for, so the check just
+        /// finds nothing.
+        /// </summary>
+        private async Task CheckForNewVersion()
+        {
+            try
+            {
+                using (var stream = await UpdateClient.GetStreamAsync(LatestReleaseUrl))
+                using (var reader = JsonReaderWriterFactory.CreateJsonReader(
+                    stream, Encoding.UTF8, XmlDictionaryReaderQuotas.Max, dictionaryReader => { }))
                 {
-                    var updateUrl =
-                        "https://gist.githubusercontent.com/ThoNohT/3181561f8148fb6b865f88714e975154/raw/nohboard_version.json";
+                    var serializer = new DataContractJsonSerializer(typeof(ReleaseInfo));
+                    var release = (ReleaseInfo) serializer.ReadObject(reader);
+                    var latest = VersionInfo.Parse(release?.TagName);
 
-                    VersionInfo downloadVersionInfo(string url)
-                    {
-                        var serializer = new DataContractJsonSerializer(typeof(VersionInfo));
-                        using (var client = new HttpClient())
-                        using (var reader = JsonReaderWriterFactory.CreateJsonReader(
-                            client.GetStreamAsync(updateUrl).Result,
-                            Encoding.UTF8,
-                            XmlDictionaryReaderQuotas.Max,
-                            dictionaryReader => { }))
-                        {
-                            return (VersionInfo)serializer.ReadObject(reader);
-                        }
-                    }
-
-                    var versionInfo = downloadVersionInfo(updateUrl);
-
-                    if ((versionInfo.Major > Version.Major) ||
-                        (versionInfo.Major == Version.Major && versionInfo.Minor > Version.Minor) ||
-                        (versionInfo.Major == Version.Major && versionInfo.Minor == Version.Minor
-                         && versionInfo.Patch > Version.Patch))
-                    {
-                        this.latestVersion = versionInfo;
-                    }
-                });
+                    if (latest != null && latest.IsNewerThan(Version.Major, Version.Minor, Version.Patch))
+                        this.latestVersion = latest;
+                }
+            }
+            catch (Exception)
+            {
+                // Leaving the version unknown is the right outcome for a check that could not be made.
+            }
         }
 
         #endregion Version check
@@ -364,7 +383,7 @@ namespace ThoNohT.NohBoard.Forms
 
             this.Text = string.IsNullOrWhiteSpace(title) ? $"NohBoard {Version.Get}" : title;
 
-            this.GetLatestVersion().Start();
+            _ = this.CheckForNewVersion();
 
             // Load a definition if possible.
             if (GlobalSettings.Settings.LoadedKeyboard != null && GlobalSettings.Settings.LoadedCategory != null)
@@ -576,7 +595,7 @@ namespace ThoNohT.NohBoard.Forms
             {
                 this.mnuUpdate.Text = $"New version available: {this.latestVersion.Format()}.";
                 this.mnuUpdate.Visible = true;
-                this.mnuUpdate.Click += (s, ea) => { Process.Start(new ProcessStartInfo { FileName = "https://github.com/ThoNohT/NohBoard/releases", UseShellExecute = true }); };
+                this.mnuUpdate.Click += (s, ea) => { Process.Start(new ProcessStartInfo { FileName = ReleasesUrl, UseShellExecute = true }); };
             }
 
             this.mnuMoveElement.Visible = this.relevantDefinition != null;
