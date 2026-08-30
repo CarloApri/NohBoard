@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace ThoNohT.NohBoard.Extra
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Runtime.Serialization;
@@ -91,7 +92,28 @@ namespace ThoNohT.NohBoard.Extra
         /// <param name="src">The font to convert.</param>
         public static implicit operator Font(SerializableFont src)
         {
-            return new Font(new FontFamily(src.UsedFontFamily), src.Size, (FontStyle)src.Style);
+            return new Font(ResolveFontFamily(src.UsedFontFamily), src.Size, (FontStyle)src.Style);
+        }
+
+        /// <summary>
+        /// Looks up a font family by name, falling back to the default font of the system when there is no such
+        /// family installed.
+        /// </summary>
+        /// <param name="familyName">The name of the family to look up.</param>
+        /// <returns>The font family to render with.</returns>
+        /// <remarks>Styles are shared between people, and name whichever font their author had. Substituting a
+        /// readable one is the same thing that happens when the missing font is noticed on load, and it beats
+        /// bringing the program down over a font that a style merely asks for.</remarks>
+        private static FontFamily ResolveFontFamily(string familyName)
+        {
+            try
+            {
+                return new FontFamily(familyName);
+            }
+            catch (ArgumentException)
+            {
+                return SystemFonts.DefaultFont.FontFamily;
+            }
         }
 
         /// <summary>
