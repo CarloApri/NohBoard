@@ -85,6 +85,7 @@ namespace ThoNohT.NohBoard.Forms
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGenerateLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuObsGuide = new System.Windows.Forms.ToolStripMenuItem();
             this.KeyCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -120,7 +121,8 @@ namespace ThoNohT.NohBoard.Forms
             this.MainMenuSep3,
             this.mnuExit,
             this.mnuUpdate,
-            this.mnuGenerateLog});
+            this.mnuGenerateLog,
+            this.mnuObsGuide});
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(203, 424);
             this.MainMenu.Opening += new System.ComponentModel.CancelEventHandler(this.MainMenu_Opening);
@@ -394,6 +396,13 @@ namespace ThoNohT.NohBoard.Forms
             this.mnuGenerateLog.Text = "Generate crash log";
             this.mnuGenerateLog.Click += new System.EventHandler(this.mnuGenerateLog_Click);
             // 
+            // mnuObsGuide
+            // 
+            this.mnuObsGuide.Name = "mnuObsGuide";
+            this.mnuObsGuide.Size = new System.Drawing.Size(202, 22);
+            this.mnuObsGuide.Text = "OBS Quick &Guide";
+            this.mnuObsGuide.Click += new System.EventHandler(this.mnuObsGuide_Click);
+            // 
             // KeyCheckTimer
             // 
             this.KeyCheckTimer.Interval = 1000;
@@ -415,6 +424,7 @@ namespace ThoNohT.NohBoard.Forms
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
@@ -467,6 +477,7 @@ namespace ThoNohT.NohBoard.Forms
         private System.Windows.Forms.ToolStripMenuItem mnuKeyboardProperties;
         private System.Windows.Forms.ToolStripMenuItem mnuUpdateTextPosition;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateLog;
+        private System.Windows.Forms.ToolStripMenuItem mnuObsGuide;
     }
 }
 

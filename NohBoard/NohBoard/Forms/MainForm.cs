@@ -741,6 +741,55 @@ namespace ThoNohT.NohBoard.Forms
         /// This seems strange, but can be an easy way for someone to serialize all their settings into a single file
         /// to be sent for support reasons.
         /// </summary>
+        /// <summary>
+        /// The steps for capturing NohBoard in OBS. The background of the default style is green, which is what
+        /// lets the chroma key filter remove it.
+        /// </summary>
+        private static readonly string ObsQuickGuideText = string.Join(
+            Environment.NewLine,
+            "1.  Add Source (\"+\")",
+            "2.  Window Capture",
+            "3.  OK",
+            "4.  Select \"NohBoard.exe\" in Window Setting",
+            "5.  OK",
+            "6.  Right Click on \"Window Capture\" in Sources Panel",
+            "7.  Filters",
+            "8.  Add Filter (\"+\")",
+            "9.  Chroma Key",
+            "10. OK",
+            "11. Close");
+
+        /// <summary>
+        /// Shows the OBS quick guide.
+        /// </summary>
+        private void ShowObsQuickGuide()
+        {
+            MessageBox.Show(
+                this, ObsQuickGuideText, "OBS Quick Guide", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// Shows the OBS quick guide on the first run, and records that it has been shown.
+        /// </summary>
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (GlobalSettings.Settings.ObsGuideShown) return;
+
+            this.ShowObsQuickGuide();
+
+            GlobalSettings.Settings.ObsGuideShown = true;
+            GlobalSettings.Save();
+        }
+
+        /// <summary>
+        /// Shows the OBS quick guide from the menu.
+        /// </summary>
+        private void mnuObsGuide_Click(object sender, EventArgs e)
+        {
+            this.menuOpen = false;
+            this.ShowObsQuickGuide();
+        }
+
         private void mnuGenerateLog_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("This will crash NohBoard in order to generate a log, are you sure you want to do this?", "Generate crash log", MessageBoxButtons.OKCancel) == DialogResult.OK)

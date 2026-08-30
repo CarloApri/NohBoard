@@ -178,6 +178,13 @@ namespace ThoNohT.NohBoard.Extra
         #region State
 
         /// <summary>
+        /// Indicates whether the OBS quick guide has been shown. It is shown once, on the first run, and remains
+        /// available from the main menu afterwards.
+        /// </summary>
+        [DataMember]
+        public bool ObsGuideShown { get; set; }
+
+        /// <summary>
         /// The category of the currently loaded keyboard file.
         /// </summary>
         [DataMember]
