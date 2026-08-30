@@ -116,5 +116,117 @@ namespace ThoNohT.NohBoard.Hooking.Interop
             /// </summary>
             public int ExtraInfo;
         }
+
+        /// <summary>
+        /// The POINTL structure defines the X- and Y- coordinates of a point, as used by <see cref="DeviceMode"/>.
+        /// </summary>
+        /// <remarks>https://learn.microsoft.com/windows/win32/api/windef/ns-windef-pointl</remarks>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PointL
+        {
+            /// <summary>
+            /// Specifies the X-coordinate of the point.
+            /// </summary>
+            public int X;
+            /// <summary>
+            /// Specifies the Y-coordinate of the point.
+            /// </summary>
+            public int Y;
+        }
+
+        /// <summary>
+        /// The DISPLAY_DEVICEW structure contains information about a display device.
+        /// </summary>
+        /// <remarks>https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-display_devicew</remarks>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct DisplayDevice
+        {
+            /// <summary>
+            /// The size of this structure, which has to be set before it is passed to EnumDisplayDevices.
+            /// </summary>
+            public int cb;
+            /// <summary>
+            /// The name of the device, in the form \.\DISPLAY1. This is what identifies the device to
+            /// EnumDisplaySettings.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string DeviceName;
+            /// <summary>
+            /// The description of the device, for example the name of the graphics adapter.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceString;
+            /// <summary>
+            /// The state of the device, a combination of DISPLAY_DEVICE_* flags.
+            /// </summary>
+            public uint StateFlags;
+            /// <summary>
+            /// The plug and play identifier of the device.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceID;
+            /// <summary>
+            /// The registry key of the device.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceKey;
+        }
+
+        /// <summary>
+        /// The DEVMODEW structure contains information about the initialization and environment of a device. Only the
+        /// display members are of interest here, but the whole structure has to be declared for its size and the
+        /// offsets of those members to be right.
+        /// </summary>
+        /// <remarks>https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-devmodew</remarks>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct DeviceMode
+        {
+            /// <summary>
+            /// The name of the device the driver supports.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string dmDeviceName;
+            public ushort dmSpecVersion;
+            public ushort dmDriverVersion;
+            /// <summary>
+            /// The size of this structure, which has to be set before it is passed to EnumDisplaySettings.
+            /// </summary>
+            public ushort dmSize;
+            public ushort dmDriverExtra;
+            public uint dmFields;
+            /// <summary>
+            /// The position of the display in the desktop coordinate space, in physical pixels.
+            /// </summary>
+            public PointL dmPosition;
+            public uint dmDisplayOrientation;
+            public uint dmDisplayFixedOutput;
+            public short dmColor;
+            public short dmDuplex;
+            public short dmYResolution;
+            public short dmTTOption;
+            public short dmCollate;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string dmFormName;
+            public ushort dmLogPixels;
+            public uint dmBitsPerPel;
+            /// <summary>
+            /// The width of the display, in physical pixels.
+            /// </summary>
+            public uint dmPelsWidth;
+            /// <summary>
+            /// The height of the display, in physical pixels.
+            /// </summary>
+            public uint dmPelsHeight;
+            public uint dmDisplayFlags;
+            public uint dmDisplayFrequency;
+            public uint dmICMMethod;
+            public uint dmICMIntent;
+            public uint dmMediaType;
+            public uint dmDitherType;
+            public uint dmReserved1;
+            public uint dmReserved2;
+            public uint dmPanningWidth;
+            public uint dmPanningHeight;
+        }
     }
 }

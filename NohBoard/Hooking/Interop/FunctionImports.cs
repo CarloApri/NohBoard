@@ -127,6 +127,52 @@ namespace ThoNohT.NohBoard.Hooking.Interop
         internal static extern short GetKeyState(int vKey);
 
         /// <summary>
+        /// The EnumDisplayDevices function lets you obtain information about the display devices in the current
+        /// session.
+        /// </summary>
+        /// <param name="lpDevice">
+        /// [in] The device name. Pass <c>null</c> to enumerate the display adapters in the session.
+        /// </param>
+        /// <param name="iDevNum">
+        /// [in] An index into the list of devices, which the caller increments until the function returns false.
+        /// </param>
+        /// <param name="lpDisplayDevice">
+        /// [in, out] Receives the information about the device. Its cb member has to be set to the size of the
+        /// structure before the call.
+        /// </param>
+        /// <param name="dwFlags">[in] Set to 0 to retrieve the device name in the form \.\DISPLAY1.</param>
+        /// <returns>True if the device at the given index exists, false once the list is exhausted.</returns>
+        /// <remarks>https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw</remarks>
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool EnumDisplayDevices(
+            string lpDevice,
+            uint iDevNum,
+            ref Structs.DisplayDevice lpDisplayDevice,
+            uint dwFlags);
+
+        /// <summary>
+        /// The EnumDisplaySettings function retrieves information about one of the graphics modes for a display
+        /// device. The reported resolution and position are in physical pixels, and are not adjusted to match the DPI
+        /// awareness of the calling process the way the window management functions are.
+        /// </summary>
+        /// <param name="lpszDeviceName">
+        /// [in] The display device to retrieve the mode for, as named by EnumDisplayDevices.
+        /// </param>
+        /// <param name="iModeNum">
+        /// [in] The index of the mode to retrieve, or ENUM_CURRENT_SETTINGS for the mode the device is currently in.
+        /// </param>
+        /// <param name="lpDevMode">
+        /// [in, out] Receives the mode. Its dmSize member has to be set to the size of the structure before the call.
+        /// </param>
+        /// <returns>True if the mode could be retrieved, false otherwise.</returns>
+        /// <remarks>https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw</remarks>
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool EnumDisplaySettings(
+            string lpszDeviceName,
+            int iModeNum,
+            ref Structs.DeviceMode lpDevMode);
+
+        /// <summary>
         /// Retrieves the higher order word of the data.
         /// </summary>
         /// <param name="data">The data to retrieve the hiword of.</param>

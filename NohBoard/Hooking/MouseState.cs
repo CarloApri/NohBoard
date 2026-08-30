@@ -120,14 +120,19 @@ namespace ThoNohT.NohBoard.Hooking
         /// <param name="activate">True if distance should be caculated relative to the screen center,
         /// false if distance should be calculated relative to the previous mouse position.</param>
         /// <remarks>This method also recalculates the screen centers. So if a screen is added or removed while NohBoard
-        /// is running, calling this method with <c>true</c> will re-calculate the new screen locations.</remarks>
-        /// <param name="screenCenters">The screen centers to calculate for.</param>
-        public static void SetMouseFromCenter(bool activate, List<(Rectangle screen, Point center)> screenCenters)
+        /// is running, calling this method with <c>true</c> will re-calculate the new screen locations. The centers are
+        /// determined here rather than passed in, because they have to be expressed in the same physical pixels the
+        /// mouse hook reports its positions in, and the screen bounds Windows hands to a DPI-unaware process are
+        /// not.</remarks>
+        public static void SetMouseFromCenter(bool activate)
         {
             mouseFromCenter = activate;
 
             // Determine the screens and their centers.
-            if (activate) ScreenCenters = screenCenters;
+            if (activate)
+                ScreenCenters = ScreenGeometry.GetPhysicalScreenBounds()
+                    .Select(b => (b, b.Location + new Size(b.Width / 2, b.Height / 2)))
+                    .ToList();
         }
 
         /// <summary>
@@ -327,16 +332,13 @@ namespace ThoNohT.NohBoard.Hooking
         /// set to <c>true</c>.</remarks>
         private static Point? GetScreenCenterForPoint(Point point)
         {
+            // Screens sit edge to edge, and Right and Bottom are the first coordinates past a screen, so a point on
+            // the left edge of one screen would land in the screen before it as well if they were included.
             Func<Rectangle, Point, bool> contains =
-                (r, p) => p.X >= r.Left && p.X <= r.Right && p.Y >= r.Top && p.Y <= r.Bottom;
+                (r, p) => p.X >= r.Left && p.X < r.Right && p.Y >= r.Top && p.Y < r.Bottom;
 
-            var result = ScreenCenters.Where(t => contains(t.screen, point))
+            return ScreenCenters.Where(t => contains(t.screen, point))
                 .Select(t => (Point?)t.center).FirstOrDefault();
-            // For some reason a point can be in multiple screens at the same time? Probably while dragging the window
-            // around over to another window. To bypass this, we just get the first one, and it'll have to do. There is
-            // no way to prioritize any of the screens.
-
-            return result;
         }
 
         /// <summary>
