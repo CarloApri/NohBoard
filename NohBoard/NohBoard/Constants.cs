@@ -75,6 +75,12 @@ namespace ThoNohT.NohBoard
         public const string PortableMarkerFileName = "portable.txt";
 
         /// <summary>
+        /// The name of the file that records which version of NohBoard last merged in the keyboard definitions it
+        /// ships with.
+        /// </summary>
+        public const string StockVersionFileName = "stock-version.txt";
+
+        /// <summary>
         /// The full path to the settings file.
         /// </summary>
         public static string SettingsFilename => Path.Combine(DataPath, SettingsFileName);
@@ -83,6 +89,12 @@ namespace ThoNohT.NohBoard
         /// The full path to the folder crash logs are written to.
         /// </summary>
         public static string LogsPath => Path.Combine(DataPath, "logs");
+
+        /// <summary>
+        /// The full path to the folder containing the keyboard definitions. Definitions and styles are edited and
+        /// saved from within NohBoard, so they have to live somewhere writable rather than next to the executable.
+        /// </summary>
+        public static string KeyboardsPath => Path.Combine(DataPath, KeyboardsFolder);
 
         /// <summary>
         /// The resolved data path, cached because probing the filesystem for it is not free.

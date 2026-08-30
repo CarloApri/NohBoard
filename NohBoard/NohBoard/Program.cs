@@ -19,6 +19,7 @@ namespace ThoNohT.NohBoard
 {
     using System;
     using System.Windows.Forms;
+    using Extra;
     using Forms;
 
     static class Program
@@ -37,6 +38,10 @@ namespace ThoNohT.NohBoard
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                // The definitions have to be in place before the main form loads one of them.
+                FileHelper.EnsureKeyboardsFolder();
+
                 Application.Run(new MainForm());
             });
         }

@@ -251,10 +251,7 @@ namespace ThoNohT.NohBoard.Keyboard
         public void Save()
         {
             var filename = Path.Combine(
-                Constants.ExePath,
-                Constants.KeyboardsFolder,
-                this.Category,
-                this.Name,
+                FileHelper.FromKbs(this.Category, this.Name).FullName,
                 Constants.DefinitionFilename);
 
             FileHelper.EnsurePathExists(filename);

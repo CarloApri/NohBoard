@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace ThoNohT.NohBoard.Extra
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.Serialization.Json;
@@ -118,13 +119,62 @@ namespace ThoNohT.NohBoard.Extra
         }
 
         /// <summary>
+        /// Merges the keyboard definitions that ship with this build into the data path. On a first run that copies
+        /// all of them, and after an update it adds the ones that are new, without ever touching a file that is
+        /// already there, so definitions and styles the user has edited are left alone.
+        /// </summary>
+        public static void EnsureKeyboardsFolder()
+        {
+            var shipped = new DirectoryInfo(Path.Combine(Constants.ExePath, Constants.KeyboardsFolder));
+            if (!shipped.Exists) return;
+
+            var target = new DirectoryInfo(Constants.KeyboardsPath);
+
+            // A portable installation reads and writes the shipped folder itself, there is nothing to merge.
+            if (string.Equals(
+                shipped.FullName.TrimEnd(Path.DirectorySeparatorChar),
+                target.FullName.TrimEnd(Path.DirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase)) return;
+
+            // Merging once per version, rather than on every start, keeps definitions the user deliberately
+            // deleted from coming back every time NohBoard is opened.
+            var stampFile = Path.Combine(Constants.DataPath, Constants.StockVersionFileName);
+            var currentVersion = ThoNohT.NohBoard.Version.Get;
+            if (File.Exists(stampFile) && File.ReadAllText(stampFile).Trim() == currentVersion) return;
+
+            CopyMissingFiles(shipped, target);
+
+            // Stamping only after a completed merge means an interrupted one is simply retried on the next start.
+            File.WriteAllText(stampFile, currentVersion);
+        }
+
+        /// <summary>
+        /// Recursively copies the files in <paramref name="source"/> that <paramref name="target"/> does not have.
+        /// </summary>
+        /// <param name="source">The directory to copy from.</param>
+        /// <param name="target">The directory to copy into.</param>
+        private static void CopyMissingFiles(DirectoryInfo source, DirectoryInfo target)
+        {
+            target.Create();
+
+            foreach (var file in source.GetFiles())
+            {
+                var destination = Path.Combine(target.FullName, file.Name);
+                if (!File.Exists(destination)) file.CopyTo(destination);
+            }
+
+            foreach (var directory in source.GetDirectories())
+                CopyMissingFiles(directory, target.CreateSubdirectory(directory.Name));
+        }
+
+        /// <summary>
         /// Returns a <see cref="DirectoryInfo"/> for the path to the specified parts, from the keyboards folder.
         /// </summary>
         /// <param name="parts">The parts that make up the path from the keyboards folder.</param>
         /// <returns>The specified <see cref="DirectoryInfo"/>.</returns>
         public static DirectoryInfo FromKbs(params string[] parts)
         {
-            var array = new List<string> { Constants.ExePath, Constants.KeyboardsFolder };
+            var array = new List<string> { Constants.KeyboardsPath };
             array.AddRange(parts);
             return new DirectoryInfo(Path.Combine(array.ToArray()));
         }
