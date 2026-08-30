@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
 Copyright (C) 2016 by Eric Bataille <e.c.p.bataille@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -455,7 +455,19 @@ namespace ThoNohT.NohBoard.Forms
             HookManager.DisableMouseHook();
             HookManager.DisableKeyboardHook();
 
-            GlobalSettings.Save();
+            // Closing must not become a trip through the crash handler when the settings cannot be written.
+            try
+            {
+                GlobalSettings.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Could not save the settings to {Constants.SettingsFilename}.{Environment.NewLine}{ex.Message}",
+                    "NohBoard",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>

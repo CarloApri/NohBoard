@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace ThoNohT.NohBoard
 {
+    using System;
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
@@ -63,9 +64,79 @@ namespace ThoNohT.NohBoard
         public static Graphics G => Graphics.FromHwndInternal(new Form().Handle);
 
         /// <summary>
-        /// The filename of the settings file.
+        /// The name of the settings file, without a folder.
         /// </summary>
-        public static string SettingsFilename => "NohBoard.json";
+        private const string SettingsFileName = "NohBoard.json";
+
+        /// <summary>
+        /// The name of the marker file that puts NohBoard in portable mode, keeping everything next to the
+        /// executable. Placing an empty file with this name next to NohBoard.exe is enough.
+        /// </summary>
+        public const string PortableMarkerFileName = "portable.txt";
+
+        /// <summary>
+        /// The full path to the settings file.
+        /// </summary>
+        public static string SettingsFilename => Path.Combine(DataPath, SettingsFileName);
+
+        /// <summary>
+        /// The full path to the folder crash logs are written to.
+        /// </summary>
+        public static string LogsPath => Path.Combine(DataPath, "logs");
+
+        /// <summary>
+        /// The resolved data path, cached because probing the filesystem for it is not free.
+        /// </summary>
+        private static string dataPath;
+
+        /// <summary>
+        /// The folder NohBoard reads and writes its settings, keyboards and crash logs in. By default this is the
+        /// per user application data folder, following the Windows convention, so that replacing the program folder
+        /// during an update cannot take the settings and keyboards with it. A portable installation keeps everything
+        /// next to the executable instead.
+        /// </summary>
+        public static string DataPath => dataPath ?? (dataPath = ResolveDataPath());
+
+        /// <summary>
+        /// Determines the folder to read and write settings, keyboards and crash logs in.
+        /// </summary>
+        /// <returns>The executable folder for a portable installation, the per user application data folder
+        /// otherwise.</returns>
+        private static string ResolveDataPath()
+        {
+            var exePath = ExePath;
+
+            // Portable mode is requested by the marker file, and an installation that already keeps its settings
+            // next to the executable keeps doing so, so that upgrading does not strand the settings it has.
+            var isPortable = File.Exists(Path.Combine(exePath, PortableMarkerFileName))
+                             || File.Exists(Path.Combine(exePath, SettingsFileName));
+            if (isPortable && DirectoryIsWritable(exePath)) return exePath;
+
+            var appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NohBoard");
+            Directory.CreateDirectory(appDataPath);
+            return appDataPath;
+        }
+
+        /// <summary>
+        /// Checks whether a file can actually be created in the specified folder. The permissions cannot be trusted
+        /// on their own here, virtualization and inherited rights both make the answer depend on an actual write.
+        /// </summary>
+        /// <param name="path">The folder to check.</param>
+        /// <returns>True if a file could be created in the folder, false otherwise.</returns>
+        private static bool DirectoryIsWritable(string path)
+        {
+            try
+            {
+                var probeFile = Path.Combine(path, $".nohboard-{Guid.NewGuid():N}.tmp");
+                using (File.Create(probeFile, 1, FileOptions.DeleteOnClose)) { }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Returns the path this executable is running in.

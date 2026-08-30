@@ -139,12 +139,12 @@ namespace ThoNohT.NohBoard
             var counter = 1;
             var fileName = $"{DateTime.Now:yyyyMMdd-hhmmss.fffffff}{counter}.log";
 
-            while (File.Exists(Path.Combine("logs", fileName))) {
+            while (File.Exists(Path.Combine(Constants.LogsPath, fileName))) {
                 counter += 1;
                 fileName = $"A{counter}";
             }
 
-            var file = new FileInfo(Path.Combine("logs", fileName));
+            var file = new FileInfo(Path.Combine(Constants.LogsPath, fileName));
 
             if (!file.Directory.Exists) file.Directory.Create();
 
