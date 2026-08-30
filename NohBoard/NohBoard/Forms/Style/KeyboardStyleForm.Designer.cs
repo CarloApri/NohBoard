@@ -95,6 +95,7 @@ namespace ThoNohT.NohBoard.Forms.Style
             // 
             // lblBackgroundImage
             // 
+            this.lblBackgroundImage.AutoSize = true;
             this.lblBackgroundImage.Location = new System.Drawing.Point(6, 48);
             this.lblBackgroundImage.Name = "lblBackgroundImage";
             this.lblBackgroundImage.Size = new System.Drawing.Size(41, 23);

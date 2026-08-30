@@ -65,9 +65,6 @@ namespace ThoNohT.NohBoard.Controls
                 "font and be able to use the style with the correct font. Note that every link only needs to be " + nl +
                 "provided once, even if it is used in multiple key definitions.");
 
-            this.DisplayLabel.Left = this.Height + 2;
-            this.DisplayLabel.Width = this.Width - this.Height - 2;
-
             this.SetStyle(ControlStyles.ResizeRedraw, true);
         }
 
@@ -141,12 +138,18 @@ namespace ThoNohT.NohBoard.Controls
         }
 
         /// <summary>
-        /// Handles the layouting of the control. The font display label is sized to entirely fill the entire control.
+        /// Handles the layouting of the control. The font display label is sized to fill the control above the row
+        /// that holds the download link.
         /// </summary>
+        /// <remarks>The height matters as much as the width here: the label previews the font that was picked, and
+        /// that font is measured in points, so how many pixels it needs depends on the scaling of the display the
+        /// control ends up on. Deriving the height from the link row keeps the preview readable at every scaling
+        /// factor instead of only at the one the designer happened to lay the control out on.</remarks>
         private void DisplayLabel_Layout(object sender, LayoutEventArgs e)
         {
             this.DisplayLabel.Left = 2;
             this.DisplayLabel.Width = this.Width - 2;
+            this.DisplayLabel.Height = Math.Max(this.txtLink.Top - this.DisplayLabel.Top - 2, this.DisplayLabel.Font.Height);
         }
 
         #endregion Methods

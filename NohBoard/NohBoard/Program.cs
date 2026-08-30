@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (C) 2016 by Eric Bataille <e.c.p.bataille@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,11 @@ namespace ThoNohT.NohBoard
                 Application.ThreadException += (s, e) => CrashHandler.HandleException(e.Exception);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) => CrashHandler.HandleException((Exception)e.ExceptionObject);
 
+                // Without this, Windows renders the whole program at 96 DPI and stretches the result to match the
+                // scaling of the display, which leaves the keyboard soft in anything that captures it. Per-monitor
+                // awareness draws it at the real pixel density of whichever display it is on instead.
                 Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 

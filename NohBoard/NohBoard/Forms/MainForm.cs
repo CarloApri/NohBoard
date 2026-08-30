@@ -179,11 +179,46 @@ namespace ThoNohT.NohBoard.Forms
             this.highlightedDefinition = null;
             this.selectedDefinition = null;
 
-            this.ClientSize = new Size(GlobalSettings.CurrentDefinition.Width, GlobalSettings.CurrentDefinition.Height);
+            this.ResizeToDefinition();
 
             this.ResetBackBrushes();
 
             return missingFonts;
+        }
+
+        /// <summary>
+        /// Sizes the drawing canvas to match the loaded keyboard definition.
+        /// </summary>
+        /// <remarks>The elements of a definition are positioned in pixels, and are drawn at those coordinates without
+        /// any scaling applied, so the canvas has to measure exactly what the definition says. Keeping it that way is
+        /// also what makes the window a predictable capture source: a definition is the same number of pixels on every
+        /// display, whatever scaling that display uses.</remarks>
+        private void ResizeToDefinition()
+        {
+            if (GlobalSettings.CurrentDefinition == null) return;
+            if (this.WindowState != FormWindowState.Normal) return;
+
+            var size = new Size(GlobalSettings.CurrentDefinition.Width, GlobalSettings.CurrentDefinition.Height);
+
+            // Before there is a window to measure, ClientSize is all there is, and at that point it still means what
+            // it says. Afterwards it does not, so the window is sized directly. See WindowSizing.
+            if (this.IsHandleCreated) WindowSizing.SetClientSize(this.Handle, size.Width, size.Height);
+            else this.ClientSize = size;
+        }
+
+        /// <summary>
+        /// Handles the window being moved to a display that uses a different scaling factor.
+        /// </summary>
+        /// <param name="e">The event arguments.</param>
+        /// <remarks>Windows Forms scales the form to the new display when this happens, which is right for the menu
+        /// and the dialogs but not for the canvas the keyboard is drawn on. That one is put back to the size the
+        /// definition asks for. The restore is queued rather than done here, because the scaling it has to undo is
+        /// not all applied before this notification returns.</remarks>
+        protected override void OnDpiChanged(DpiChangedEventArgs e)
+        {
+            base.OnDpiChanged(e);
+
+            this.BeginInvoke(new Action(this.ResizeToDefinition));
         }
 
         /// <summary>

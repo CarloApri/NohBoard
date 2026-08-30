@@ -92,7 +92,7 @@ namespace ThoNohT.NohBoard.Forms
             this.TrapGroup.Controls.Add(this.lblTrapping);
             this.TrapGroup.Location = new System.Drawing.Point(206, 68);
             this.TrapGroup.Name = "TrapGroup";
-            this.TrapGroup.Size = new System.Drawing.Size(203, 136);
+            this.TrapGroup.Size = new System.Drawing.Size(203, 146);
             this.TrapGroup.TabIndex = 1;
             this.TrapGroup.TabStop = false;
             this.TrapGroup.Text = "Trapping";
@@ -100,7 +100,7 @@ namespace ThoNohT.NohBoard.Forms
             // txtToggleKey
             // 
             this.txtToggleKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtToggleKey.Location = new System.Drawing.Point(99, 89);
+            this.txtToggleKey.Location = new System.Drawing.Point(99, 99);
             this.txtToggleKey.Multiline = true;
             this.txtToggleKey.Name = "txtToggleKey";
             this.txtToggleKey.ReadOnly = true;
@@ -115,7 +115,7 @@ namespace ThoNohT.NohBoard.Forms
             // lblToggleKey
             // 
             this.lblToggleKey.AutoSize = true;
-            this.lblToggleKey.Location = new System.Drawing.Point(9, 97);
+            this.lblToggleKey.Location = new System.Drawing.Point(9, 107);
             this.lblToggleKey.Name = "lblToggleKey";
             this.lblToggleKey.Size = new System.Drawing.Size(84, 13);
             this.lblToggleKey.TabIndex = 3;
@@ -124,7 +124,7 @@ namespace ThoNohT.NohBoard.Forms
             // chkTrapKeyboard
             // 
             this.chkTrapKeyboard.AutoSize = true;
-            this.chkTrapKeyboard.Location = new System.Drawing.Point(95, 67);
+            this.chkTrapKeyboard.Location = new System.Drawing.Point(95, 77);
             this.chkTrapKeyboard.Name = "chkTrapKeyboard";
             this.chkTrapKeyboard.Size = new System.Drawing.Size(96, 17);
             this.chkTrapKeyboard.TabIndex = 3;
@@ -134,7 +134,7 @@ namespace ThoNohT.NohBoard.Forms
             // chkTrapMouse
             // 
             this.chkTrapMouse.AutoSize = true;
-            this.chkTrapMouse.Location = new System.Drawing.Point(6, 67);
+            this.chkTrapMouse.Location = new System.Drawing.Point(6, 77);
             this.chkTrapMouse.Name = "chkTrapMouse";
             this.chkTrapMouse.Size = new System.Drawing.Size(83, 17);
             this.chkTrapMouse.TabIndex = 2;
@@ -145,7 +145,7 @@ namespace ThoNohT.NohBoard.Forms
             // 
             this.lblTrapping.Location = new System.Drawing.Point(6, 20);
             this.lblTrapping.Name = "lblTrapping";
-            this.lblTrapping.Size = new System.Drawing.Size(194, 52);
+            this.lblTrapping.Size = new System.Drawing.Size(194, 62);
             this.lblTrapping.TabIndex = 0;
             this.lblTrapping.Text = "Trapping the mouse or keyboard prevents the respective device\'s input from reachi" +
     "ng any other applications.";
@@ -270,7 +270,7 @@ namespace ThoNohT.NohBoard.Forms
             // 
             // OkButton
             // 
-            this.OkButton.Location = new System.Drawing.Point(334, 306);
+            this.OkButton.Location = new System.Drawing.Point(334, 316);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 7;
@@ -281,7 +281,7 @@ namespace ThoNohT.NohBoard.Forms
             // CancelButton2
             // 
             this.CancelButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton2.Location = new System.Drawing.Point(253, 306);
+            this.CancelButton2.Location = new System.Drawing.Point(253, 316);
             this.CancelButton2.Name = "CancelButton2";
             this.CancelButton2.Size = new System.Drawing.Size(75, 23);
             this.CancelButton2.TabIndex = 6;
@@ -296,7 +296,7 @@ namespace ThoNohT.NohBoard.Forms
             this.CapitalizationGroup.Controls.Add(this.rdbAlwaysLower);
             this.CapitalizationGroup.Controls.Add(this.rdbAlwaysCaps);
             this.CapitalizationGroup.Controls.Add(this.rdbFollowKeystate);
-            this.CapitalizationGroup.Location = new System.Drawing.Point(10, 210);
+            this.CapitalizationGroup.Location = new System.Drawing.Point(10, 220);
             this.CapitalizationGroup.Name = "CapitalizationGroup";
             this.CapitalizationGroup.Size = new System.Drawing.Size(396, 91);
             this.CapitalizationGroup.TabIndex = 8;
@@ -399,7 +399,7 @@ namespace ThoNohT.NohBoard.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CancelButton2;
-            this.ClientSize = new System.Drawing.Size(422, 342);
+            this.ClientSize = new System.Drawing.Size(422, 352);
             this.Controls.Add(this.GeneralGroup);
             this.Controls.Add(this.CapitalizationGroup);
             this.Controls.Add(this.CancelButton2);
