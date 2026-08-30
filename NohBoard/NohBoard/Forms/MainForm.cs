@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
 Copyright (C) 2016 by Eric Bataille <e.c.p.bataille@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -534,6 +534,26 @@ namespace ThoNohT.NohBoard.Forms
                 var relevantElement = this.selectedDefinition ?? this.elementUnderCursor;
                 this.mnuEditElementStyle.Enabled = relevantElement != null;
                 this.mnuElementProperties.Enabled = relevantElement != null;
+            }
+
+            // Converting a key between the keyboard and mouse variant is only possible in edit mode, and only for
+            // elements that have a counterpart to convert to.
+            var convertibleElement = this.mnuToggleEditMode.Checked && GlobalSettings.CurrentDefinition != null
+                ? this.selectedDefinition ?? this.elementUnderCursor
+                : null;
+            switch (convertibleElement)
+            {
+                case KeyboardKeyDefinition _:
+                    this.mnuConvertElement.Text = "&Convert To Mouse Key";
+                    this.mnuConvertElement.Visible = true;
+                    break;
+                case MouseKeyDefinition _:
+                    this.mnuConvertElement.Text = "&Convert To Keyboard Key";
+                    this.mnuConvertElement.Visible = true;
+                    break;
+                default:
+                    this.mnuConvertElement.Visible = false;
+                    break;
             }
 
             // Only allow editing of properties/styles in edit mode.

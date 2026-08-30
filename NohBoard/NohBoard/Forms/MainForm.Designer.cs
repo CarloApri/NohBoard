@@ -70,6 +70,7 @@ namespace ThoNohT.NohBoard.Forms
             this.MainMenuSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuKeyboardProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuElementProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuConvertElement = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditKeyboardStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditElementStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenuSep4 = new System.Windows.Forms.ToolStripSeparator();
@@ -110,6 +111,7 @@ namespace ThoNohT.NohBoard.Forms
             this.MainMenuSep1,
             this.mnuKeyboardProperties,
             this.mnuElementProperties,
+            this.mnuConvertElement,
             this.mnuEditKeyboardStyle,
             this.mnuEditElementStyle,
             this.MainMenuSep4,
@@ -283,6 +285,14 @@ namespace ThoNohT.NohBoard.Forms
             this.mnuElementProperties.Text = "Element &Properties";
             this.mnuElementProperties.Click += new System.EventHandler(this.mnuElementProperties_Click);
             // 
+            // mnuConvertElement
+            // 
+            this.mnuConvertElement.Name = "mnuConvertElement";
+            this.mnuConvertElement.Size = new System.Drawing.Size(202, 22);
+            this.mnuConvertElement.Text = "&Convert Element Type";
+            this.mnuConvertElement.Visible = false;
+            this.mnuConvertElement.Click += new System.EventHandler(this.mnuConvertElement_Click);
+            // 
             // mnuEditKeyboardStyle
             // 
             this.mnuEditKeyboardStyle.Name = "mnuEditKeyboardStyle";
@@ -452,6 +462,7 @@ namespace ThoNohT.NohBoard.Forms
         private System.Windows.Forms.ToolStripMenuItem mnuAddMouseScrollDefinition;
         private System.Windows.Forms.ToolStripMenuItem mnuAddMouseSpeedIndicatorDefinition;
         private System.Windows.Forms.ToolStripMenuItem mnuElementProperties;
+        private System.Windows.Forms.ToolStripMenuItem mnuConvertElement;
         private System.Windows.Forms.ToolStripSeparator MainMenuSep4;
         private System.Windows.Forms.ToolStripMenuItem mnuKeyboardProperties;
         private System.Windows.Forms.ToolStripMenuItem mnuUpdateTextPosition;

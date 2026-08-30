@@ -19,6 +19,7 @@ namespace ThoNohT.NohBoard.Forms
 {
     using Extra;
     using Hooking;
+    using Hooking.Interop;
     using Keyboard;
     using Keyboard.ElementDefinitions;
     using Keyboard.Styles;
@@ -623,6 +624,75 @@ namespace ThoNohT.NohBoard.Forms
             this.ResetBackBrushes();
         }
 
+        /// <summary>
+        /// Converts a key between its keyboard and mouse variant, replacing it in place in the keyboard definition.
+        /// The identifier is kept, so the element keeps the style that is defined for it, as well as its boundaries
+        /// and text. Key codes cannot be carried over, because the two variants read from different sources, so the
+        /// properties form of the new variant is opened directly to set them.
+        /// </summary>
+        private void mnuConvertElement_Click(object sender, EventArgs e)
+        {
+            this.menuOpen = false;
+
+            if (!this.mnuToggleEditMode.Checked) return;
+
+            var relevantElement = this.selectedDefinition ?? this.elementUnderCursor;
+            if (!(relevantElement is KeyDefinition keyElement)) return;
+
+            KeyDefinition converted;
+            switch (keyElement)
+            {
+                case KeyboardKeyDefinition kkDef:
+                    // A mouse key always renders exactly one key code and has no shift text, so it starts out on the
+                    // same button a newly added mouse key uses.
+                    converted = new MouseKeyDefinition(
+                        kkDef.Id,
+                        kkDef.Boundaries.Select(x => x.Clone()).ToList(),
+                        (int) MouseKeyCode.LeftButton,
+                        kkDef.Text,
+                        kkDef.TextPosition);
+                    break;
+
+                case MouseKeyDefinition mkDef:
+                    // Mouse button codes are meaningless as keyboard key codes, so the key starts out unbound, the
+                    // same way a newly added keyboard key does.
+                    converted = new KeyboardKeyDefinition(
+                        mkDef.Id,
+                        mkDef.Boundaries.Select(x => x.Clone()).ToList(),
+                        new List<int>(),
+                        mkDef.Text,
+                        mkDef.Text,
+                        false,
+                        mkDef.TextPosition);
+                    break;
+
+                default:
+                    return;
+            }
+
+            var index = GlobalSettings.CurrentDefinition.Elements.IndexOf(keyElement);
+            if (index < 0) return;
+
+            GlobalSettings.Settings.UpdateDefinition(
+                GlobalSettings.CurrentDefinition.RemoveElement(keyElement).AddElement(converted, index), true);
+
+            // The hooks are only enabled for the element types that were present when the keyboard was loaded, so the
+            // hook the new variant reads from has to be running for it to ever light up.
+            if (converted is KeyboardKeyDefinition) HookManager.EnableKeyboardHook();
+            else HookManager.EnableMouseHook();
+
+            // Unset the old definition everywhere, it has been replaced by one of a different type.
+            this.highlightedDefinition = null;
+            this.currentlyManipulating = null;
+            this.manipulationStart = null;
+            this.selectedDefinition = null;
+            this.elementUnderCursor = null;
+
+            this.ResetBackBrushes();
+
+            this.OpenElementProperties(converted);
+        }
+
         #endregion Element management
 
         #region Boundary management
@@ -695,6 +765,15 @@ namespace ThoNohT.NohBoard.Forms
             var relevantElement = this.selectedDefinition ?? this.elementUnderCursor;
             if (relevantElement == null) return;
 
+            this.OpenElementProperties(relevantElement);
+        }
+
+        /// <summary>
+        /// Opens the properties form belonging to the type of the specified element.
+        /// </summary>
+        /// <param name="relevantElement">The element to open the properties form for.</param>
+        private void OpenElementProperties(ElementDefinition relevantElement)
+        {
             // Local function to handle definition changed.
             void OnDefinitionChanged(ElementDefinition def)
             {
