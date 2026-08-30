@@ -8,13 +8,18 @@
 ; Expects the application to have been published to publish-net8 first.
 
 #define AppName        "NohBoard"
-#ifndef AppVersion
-  #define AppVersion   "1.3.0"
-#endif
 #define AppPublisher   "ThoNohT"
 #define AppUrl         "https://github.com/ThoNohT/NohBoard"
 #define PayloadDir     "..\publish-net8"
 #define KeyboardsDir   "..\keyboards"
+
+; The version is read from the executable about to be packaged, which takes it from MinVer, which takes it from
+; the version control tag. One source for the whole chain, so the name of the setup, the entry in installed apps
+; and the version inside the program cannot drift apart. Pass /DAppVersion=x.y.z to override.
+#ifndef AppVersion
+  #define ExeVersion GetVersionNumbersString(AddBackslash(SourcePath) + PayloadDir + "\NohBoard.exe")
+  #define AppVersion Copy(ExeVersion, 1, RPos(".", ExeVersion) - 1)
+#endif
 
 [Setup]
 ; Keep this GUID stable forever, it is what lets a new version replace the previous one in place.
