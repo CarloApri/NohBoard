@@ -21,7 +21,6 @@ namespace ThoNohT.NohBoard
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
-    using System.Windows.Forms;
 
     /// <summary>
     /// Contains constants used throughout the application.
@@ -57,11 +56,6 @@ namespace ThoNohT.NohBoard
         /// The default size in pixels for a new element.
         /// </summary>
         public const int DefaultElementSize = 40;
-
-        /// <summary>
-        /// A GDI+ graphics context.
-        /// </summary>
-        public static Graphics G => Graphics.FromHwndInternal(new Form().Handle);
 
         /// <summary>
         /// The category of the keyboard definition that is loaded when NohBoard starts without any settings.
