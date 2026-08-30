@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- MinVer derives the version from the most recent version control tag, so the window title, the installer
+         and the entry in installed apps can never drift apart. Tags carry a "v" prefix. A tree without any tags
+         builds as 0.0.0-alpha.0 instead of failing, which keeps a fresh clone buildable. -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
